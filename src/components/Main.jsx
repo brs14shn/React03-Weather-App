@@ -13,7 +13,6 @@ const Main = () => {
     e.preventDefault();
     getWeatherDataFromApi();
     setSearchText("");
-    // e.target.reset();
   };
   const getWeatherDataFromApi = async () => {
     let apiKey = process.env.REACT_APP_API_KEY;
@@ -22,11 +21,10 @@ const Main = () => {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${searchText}&appid=${apiKey}&units=${units}&lang=${lang}`;
     try {
       const response = await axios.get(url);
-      console.log(response);
+      //   console.log(response);
       const { main, name, sys, weather, id } = response.data;
       const iconUrl = `https://openweathermap.org/img/wn/${weather[0].icon}@2x.png`;
 
-      setData([{ main, name, sys, weather, id, iconUrl }, ...data]);
       const isExist = data.some((card) => card.id === id);
       if (isExist) {
         setError(
@@ -36,7 +34,7 @@ const Main = () => {
           setError("");
         }, 5000);
       } else {
-        setData([{ main, name, sys, weather, id, iconUrl }, ...data]);
+        setData([{ main, name, sys, weather, iconUrl, id }, ...data]);
       }
     } catch (err) {
       console.log(err);
@@ -46,6 +44,7 @@ const Main = () => {
       }, 5000);
     }
   };
+  console.log(data);
   return (
     <section className="main">
       <form onSubmit={handleSubmit}>
@@ -61,7 +60,7 @@ const Main = () => {
       </form>
       <div className="container">
         <ul className="cities">
-          {data.map((item) => (
+          {data?.map((item) => (
             <WeatherCard key={item.id} data={item} />
           ))}
         </ul>
